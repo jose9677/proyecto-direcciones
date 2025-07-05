@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('urbanizations', function (Blueprint $table) {
             $table->id('id_urb');
             $table->string('description', 255);
+            $table->unsignedBigInteger('id_prq');
             $table->boolean('active');
             $table->timestamps();
+
+            $table->foreign('id_prq')->references('id_prq')->on('prqs')->onUpdate('cascade');
         });
     }
 
