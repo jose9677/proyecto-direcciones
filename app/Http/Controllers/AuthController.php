@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Providers\BearerTokenServiceProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -190,6 +191,11 @@ class AuthController extends Controller
             ], 200);
     }
 
+    public function validateUser(Request $request)
+    {
+
+    }
+
     public function validateEmail(Request $request)
     {
         Log::info($request);
@@ -211,7 +217,7 @@ class AuthController extends Controller
 
                 //ENVIAR CORREO...
 
-                $user->validateEmail(); //Validar Email
+                $user->validateEmail($request); //Validar Email
                 return response()->json(['message' => 'Email validated succesfull'], 200);
             } catch (Exception $e) {
                 return $e->getMessage();
@@ -232,6 +238,7 @@ class AuthController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
+            'login' => 'required',
             'password' => ['required',
                 Password::min(8)
                         ->letters()
@@ -262,5 +269,19 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function activeUser($login)
+    {
+        $data = User::query()->where('login', $login)->update(['active' => true]);
+
+        return response()->json(['message' => 'User Actived successfull'], 200);
+    }
+
+    public function desactiveUser($login)
+    {
+        $data = User::query()->where('login', $login)->update(['active' => false]);
+
+        return response()->json(['message' => 'User Desactived successfull'], 200);
     }
 }

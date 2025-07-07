@@ -65,7 +65,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function getJWTCustomClaims()
     {
-        return [];
+        return [
+            'login' => $this->login,
+            'id_rol' => $this->id_rol
+        ];
     }
 
     protected function casts(): array
@@ -173,7 +176,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function changePassword(Request $request)
     {
-        $new_pass = User::query()->where('login', $request->login)->update(['password' => $request->password]);
+        $new_pass = User::query()->where('login', $request->login)->update(['password' => Hash::make($request->password)]);
     }
 
     protected $table = 'users';
