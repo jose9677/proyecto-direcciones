@@ -22,7 +22,7 @@ Route::prefix('app')->controller(AuthController::class)->group(function (){
     Route::post('/login', 'login');
     Route::post('/','register');
     Route::post('register-employee','registerEmployee');
-    Route::post('validate-user', 'validateUser'); //PROBANDO...
+    Route::post('validate-user', 'validateUser');
     Route::post('validate-email', 'validateEmail');
     Route::put('change-password', 'changePassword');
 })->withoutMiddleware([JwtMiddleware::class]);    

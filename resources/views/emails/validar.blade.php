@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div>
+    Para configurar una nueva contraseña por favor ingrese al siguiente enlace:<br><br>
+
+    <!-- MODIFICAR EL ENLACE DE ABAJO Y ADAPATARLO A LAS CONFIGURAIONES DE ESTE PROYECTO... -->
+    <span style="color: #0eadb0;"><a href="{{$app_url}}/auth/cambiar-contrasena?api_token={{$api_token}}">{{$app_url}}/auth/cambiar-contrasena?api_token={{$api_token}}</a></span><br><br>
+
+    Saludos cordiales.<br><br>
+    IMPORTANTE: Si usted no solicitó un cambio de contraseña por favor ignore este mensaje<br><br>
+    <!-- MODICAR CORREO SOLICITADO EN LA LINEA DE ABAJO AL NUEVO QUE TE IDIQUEN -->
+    <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje. Si desea información adicional o ayuda en el proceso, puede enviar un correo electrónico a convenios@corp-lareina.cl</span>
+</div>
+</body>
+</html>

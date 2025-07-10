@@ -56,8 +56,8 @@ class AuthController extends Controller
             $user = $user->register($request);
             DB::commit();
         } catch (Exception $e) {
-            return $e->getMessage();
             DB::rollBack();
+            return $e->getMessage();
         }
 
         return response()->json(['user' => $user], 200);
@@ -95,8 +95,8 @@ class AuthController extends Controller
             $user = $user->registerEmployee($request);
             DB::commit();
         } catch (Exception $e) {
-            return $e->getMessage();
             DB::rollBack();
+            return $e->getMessage();
         }
 
         return response()->json(['user' => $user], 200);
@@ -193,7 +193,37 @@ class AuthController extends Controller
 
     public function validateUser(Request $request)
     {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'login' => 'required'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::where([
+            'login' => $request['login']
+        ])->get();
+    
+        if (!$user->count()) {
+            return response()->json(['error' => 'User does not exists in Data Base', 'code' => '000'], 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = new User();
+            $user = $user->validateUser($request);
+            $app_url = env('APP_URL');
+            
+            //COLOCAR ENVIO DE CORREO...
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+
+        return response()->json(['message' => 'User Validation successfull'], 200);
     }
 
     public function validateEmail(Request $request)
@@ -225,13 +255,6 @@ class AuthController extends Controller
         }else {
             return response()->json(['error' => 'Invalid code, please check it again', 'code' => '004'], 400);
         }
-    }
-
-    public function generateApiToken()
-    {
-        $api_token = Str::random(50);
-
-        return $api_token;
     }
 
     public function changePassword(Request $request)

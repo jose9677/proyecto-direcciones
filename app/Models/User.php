@@ -151,7 +151,7 @@ class User extends Authenticatable implements JWTSubject
 
         $randomString = '';
 
-        for ($i=0; $i < $lenght; $i++) { 
+        for ($i = 0; $i < $lenght; $i++) { 
             $randomString .= $characters[rand(0, $charactersLenght -1)];
         }
 
@@ -172,6 +172,18 @@ class User extends Authenticatable implements JWTSubject
     {   
         $email = User::where('otp', $request->otp)->value('email');
         User::query()->where('otp', $request->otp)->update(['otp' => null, 'email_active' => true]);
+    }
+
+    public function validateUser(Request $request)
+    {
+        $data = User::query()->where('login', $request->login)->first(['email_active', 'otp']);
+        
+        if ($data->email_active == true && empty($data->otp)) {
+            $api_token = Str::random(50);
+            $user = User::query()->where('login', $request->login)->update(['api_token' => $api_token]);   
+        }
+        //FALTA LA ACCION EN CASO DE NO CUMPLIR ESTA CONDICION...
+        //PUEDE SER UN METODO DE REINICIAR USUARIO...
     }
 
     public function changePassword(Request $request)
